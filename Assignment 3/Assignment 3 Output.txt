@@ -1,0 +1,176 @@
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 1
+
+Item 1 - Enter the product ID, 0 to stop: 1st
+Enter the price: 234.31 
+Enter the quantity: 543
+
+Item 2 - Enter the product ID, 0 to stop: 2nd
+Enter the price: 4534
+Enter the quantity: 234
+
+Item 3 - Enter the product ID, 0 to stop: 3rd
+Enter the price: 12.32
+Enter the quantity: 856
+
+Item 4 - Enter the product ID, 0 to stop: 4th
+Enter the price: 897.12
+Enter the quantity: 9
+
+Item 5 - Enter the product ID, 0 to stop: 5th
+Enter the price: 655.32
+Enter the quantity: 0
+
+Item 6 - Enter the product ID, 0 to stop: 6th
+Enter the price: 23
+Enter the quantity: 561
+
+Item 7 - Enter the product ID, 0 to stop: 5th
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Item 7 - Enter the product ID: 7th
+Enter the price: 34.32
+Enter the quantity: 564
+
+Item 8 - Enter the product ID, 0 to stop: 7th
+This item already exists. Would you like to input a new product ID? (Y/N): n
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 1
+
+Item 8 - Enter the product ID, 0 to stop: 8th
+Enter the price: 45.34
+Enter the quantity: 3454
+
+Item 9 - Enter the product ID, 0 to stop: 9th
+Enter the price: 346.43
+Enter the quantity: 342
+
+Item 10 - Enter the product ID, 0 to stop: 0
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 1
+
+Item 10 - Enter the product ID, 0 to stop: 10th
+Enter the price: 3455.64
+Enter the quantity: 1232
+
+Item 11 - Enter the product ID, 0 to stop: 0
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 2
+
+What is the product ID: 11th
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 2
+
+What is the product ID: 5th
+Enter the new price: 23.43
+
+Product ID: 5th
+Updated price: 23.43
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 3
+
+What is the product ID: 11th
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 3
+
+What is the product ID: 8th
+Enter the new quantity: 3453
+
+Product ID: 8th
+Updated quantity: 3453
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 4
+
+What is the product ID: 17th
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 4
+
+What is the product ID: 5th
+
+Product ID: 5th
+Price: 23.43
+Quantity: 0
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 5
+
+Item No. | Product ID |   Price | Quantity
+------------------------------------------
+       1 |        1st |  234.31 |      543
+       2 |        2nd | 4534.00 |      234
+       3 |        3rd |   12.32 |      856
+       4 |        4th |  897.12 |        9
+       5 |        5th |   23.43 |        0
+       6 |        6th |   23.00 |      561
+       7 |        7th |   34.32 |      564
+       8 |        8th |   45.34 |     3453
+       9 |        9th |  346.43 |      342
+      10 |       10th | 3455.64 |     1232
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Display Item
+5. Print Database
+6. Exit Program
+Make a choice: 6
