@@ -1,82 +1,141 @@
 // Johanny Mateo
-// CISC 3110 - Assignment 3
-// Change function arrays to pointers
+// CISC 3110 - Assignment 4
+// Dynamically Allocate All Arrays
+// Make ProdID 2D array
+// Delete items
+// Double array size if needed
 
 #include <iostream>
 #include <string>
 #include <iomanip>
 using namespace std;
 
+const int PRODIDLIM = 5;        // PROD ID cannot have more than 4 chars + null
+
 // fn to add items to arrays, returns nothing and
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr,
 // and counter of current arr loc
-void addItem(string *, double *, int *, int &);
+// max is the const int for max no. of items, it is not to be changed
+void addItem(char **, double *, int *, int *, const int);
 // fn to find index of productID, retuns index as int,
-// accepts ptr to prodIDArr, prodID, and up to where is the arr filled
-int findID(const string *, string, int);
+// accepts ptr to prodIDArr, and up to where is the arr filled
+int findID(const char **, int);
 // fn to update price, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, and array fill loc
-void updateItem(const string *, double *, int);
+void updateItem(const char **, double *, int);
 // fn to update quantity, returns nothing
 // accepts ptr to prodIDArr, ptr to QOHArr, and array fill loc
-void updateItem(const string *, int *, int);
+void updateItem(const char **, int *, int);
 // fn to display item, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void displayItem(const string *, const double *, const int *, int);
+void displayItem(const char **, const double *, const int *, int);
 // fn to print DB, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void printDB(const string *, const double *, const int *, int);
+void printDB(const char **, const double *, const int *, int);
 // fn to display switch instructions, returns choice, accepts nothing
 int instructions();
 // fn to check for and correct prodID duplicate, returns true if it exists
 // accepts ptr to prodIDArr, prodID by reference, and arr insert loc
-bool dupeCheck(const string *, string &, int);
-
-// array to have 1000 locations
-const int DBMAX = 1000;
+// bool dupeCheck(const string *, string &, int);
 
 int main()
 {
-    string prodIDArr[DBMAX];
-    double priceArr[DBMAX];
-    // items is used to keep track of up to where are the arrays are filled
-    int QOHArr[DBMAX], choice, items = 0;
+    // filled ptr is used to keep track of up to where are the arrays are filled
+    int max, choice, fillLevel = 0, *filled = &fillLevel;
 
     // print the menu instructions
     choice = instructions();
 
+    cout << "How many items would you like to add to the databse: ";
+    cin >> max;
+    cin.clear();        // clear the null terminator from the buffer
+
+    // create arrays on the heap
+    // REVIEW: Have they been deleted and ptrs reset to null?
+    // prodIDArr
+    // declare a pointer(that will point to the entirety of the 2D array/rows), that will then point to chars
+        // pointer -> pointer -> char
+    char **prodIDArr = NULL;
+    // on the heap, create an array with the max number of rows. This array, will contain pointers that willl then point to chars (ex, make 1000 pointers. Those 1000 pointers will point to 5 pointers that will tell u the char)
+    prodIDArr = new char*[max];
+        // declare c-string arr
+        // go through each row
+        for (int row = 0; row < max; row++) {
+            // on the heap, inside of each row of arrays, create another array with 5 locations for the chars
+            prodIDArr[row] = new char[PRODIDLIM];
+        }
+    // price pointer & array
+    double *priceArr = new double[max]
+    // QOH pointer and array
+    int *QOHArr = new int[max];
+
     while (choice != 6) {       // 6 is exit; skip this loop and return to OS
         switch (choice) {
             case 1:
-                addItem(prodIDArr, priceArr, QOHArr, items);
+                addItem(prodIDArr, priceArr, QOHArr, filled, max);
                 break;
             case 2:
-                updateItem(prodIDArr, priceArr, items);
+                updateItem(prodIDArr, priceArr, filled);
                 break;
             case 3:
-                updateItem(prodIDArr, QOHArr, items);
+                updateItem(prodIDArr, QOHArr, filled);
                 break;
             case 4:
-                displayItem(prodIDArr, priceArr, QOHArr, items);
+                displayItem(prodIDArr, priceArr, QOHArr, filled);
                 break;
             case 5:
-                printDB(prodIDArr, priceArr, QOHArr, items);
+                printDB(prodIDArr, priceArr, QOHArr, filled);
                 break;
             default:
                 cerr << "Please make a valid choice.\n";
         }
         choice = instructions();    // bring up menu again
     }
+
+    // delete arrays on heap & reset pointers
+
+    // for the 2D Array:
+    // delete the contents in each row (delete the product IDs arrays)
+    for (int row = 0; row < max; row++) {
+        delete [] prodIDArr[row];
+    }
+    // now delete the rows themselves (delete the pointers that used to point to the arrays for the product ID's)
+    delete [] prodIDArr;
+    // nothing on the heap, set the pointer to point to null
+    prodIDArr = NULL;
+
+    delete [] priceArr;
+    priceArr = NULL;
+
+    delete [] QOHArr;
+    QOHArr = NULL;
+
     return 0;
 }
 
-void addItem(string *prodIDArr, double *priceArr, int *QOHArr, int &items)
+// max is const because it is not to be changed inside this func
+void addItem(char **prodIDArr, double *priceArr, int *QOHArr, int *filled, const int max)
+{
+    cout << "Product ID Numbers must be in the format of 2 letters followed by 2 numbers. Example: AA00\n";
+
+    while (*filled < max) {
+        for (int row = 0; row < max; row++) {
+            for (int col = 0; col < PRODIDLIM; col++) {
+                cout << "Item " << *(filled)+1 << " out of " << max << ". Enter 0000 to stop: ";
+            }
+        }
+}
+    return 0;
+}
+
+/*
+void addItem(char *prodIDArr, double *priceArr, int *QOHArr, int &items, const int max)
 {
     char ans; // ans is to keep adding items
     bool dupe;  // is there an uncorrected duplicate?
     string prodID;
 
-    if (items < DBMAX) {        // makes sure not to go out of bounds in array
+    if (items < max) {        // makes sure not to go out of bounds in array
         cerr << "Item " << items+1 << " - Enter the product ID, 0 to stop: ";
         cin >> prodID;
 
@@ -101,8 +160,9 @@ void addItem(string *prodIDArr, double *priceArr, int *QOHArr, int &items)
     cerr << endl;
     return;
 }
+*/
 
-int findID(const string *prodIDArr, string findID, int filled)
+int findID(const char *prodIDArr, string findID, int filled)
 {
     for (int i = 0; i < filled; i++)
         if (*(prodIDArr + i) == findID)
@@ -110,7 +170,7 @@ int findID(const string *prodIDArr, string findID, int filled)
     return -1;          // -1 to know that product id wasn't found
 }
 
-void updateItem(const string *prodIDArr, double *priceArr, int filled)
+void updateItem(const char *prodIDArr, double *priceArr, int filled)
 {
     int editLoc;            // the index of item to be updated
     string editID;
@@ -132,7 +192,7 @@ void updateItem(const string *prodIDArr, double *priceArr, int filled)
     }
 }
 
-void updateItem(const string *prodIDArr, int *QOHArr, int filled)
+void updateItem(const char *prodIDArr, int *QOHArr, int filled)
 {
     int editLoc;            // the index of item to be updated
     string editID;
@@ -154,7 +214,7 @@ void updateItem(const string *prodIDArr, int *QOHArr, int filled)
     }
 }
 
-void displayItem(const string *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
+void displayItem(const char *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
 {
     int loc;            // loc to be displayed
     string displayID;
@@ -175,7 +235,7 @@ void displayItem(const string *prodIDArr, const double *priceArr, const int *QOH
     }
 }
 
-void printDB(const string *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
+void printDB(const char *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
 {
     cerr << setw(10) << "Item No. |" << setw(13) << " Product ID |"
          << setw(10) << " Price |" << setw(10) << " Quantity\n";
@@ -202,7 +262,7 @@ int instructions()
     cerr << endl;
     return decision;
 }
-
+/*
 bool dupeCheck(const string *prodIDArr, string &prodID, int currLoc)
 {
     char ans;           // enter new ID?
@@ -231,3 +291,4 @@ bool dupeCheck(const string *prodIDArr, string &prodID, int currLoc)
     else                // there are no dupes, or it was corrected, return false
         return false;
 }
+*/
