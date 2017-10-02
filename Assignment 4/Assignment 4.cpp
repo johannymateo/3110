@@ -16,22 +16,22 @@ const int PRODIDLIM = 5;        // PROD ID cannot have more than 4 chars + null
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr,
 // and counter of current arr loc
 // max is the const int for max no. of items, it is not to be changed
-void addItem(char **, double *, int *, int *, const int);
+void addItem(char **, double *, int *, int &, const int);
 // fn to find index of productID, retuns index as int,
 // accepts ptr to prodIDArr, and up to where is the arr filled
-int findID(const char **, int);
+int findID(const char **, const int);
 // fn to update price, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, and array fill loc
-void updateItem(const char **, double *, int);
+void updateItem(const char **, double *, const int);
 // fn to update quantity, returns nothing
 // accepts ptr to prodIDArr, ptr to QOHArr, and array fill loc
-void updateItem(const char **, int *, int);
+void updateItem(const char **, int *, const int);
 // fn to display item, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void displayItem(const char **, const double *, const int *, int);
+void displayItem(const char **, const double *, const int *, const int);
 // fn to print DB, returns nothing
 // accepts ptr to prodIDArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void printDB(const char **, const double *, const int *, int);
+void printDB(const char **, const double *, const int *, const int);
 // fn to display switch instructions, returns choice, accepts nothing
 int instructions();
 // fn to check for and correct prodID duplicate, returns true if it exists
@@ -41,14 +41,15 @@ int instructions();
 int main()
 {
     // filled ptr is used to keep track of up to where are the arrays are filled
-    int max, choice, fillLevel = 0, *filled = &fillLevel;
+    int max, choice, items = 0;
 
     // print the menu instructions
-    choice = instructions();
 
-    cout << "How many items would you like to add to the databse: ";
+    cout << "How many items would you like to add to the database: ";
     cin >> max;
     cin.clear();        // clear the null terminator from the buffer
+
+    choice = instructions();
 
     // create arrays on the heap
     // REVIEW: Have they been deleted and ptrs reset to null?
@@ -65,27 +66,27 @@ int main()
             prodIDArr[row] = new char[PRODIDLIM];
         }
     // price pointer & array
-    double *priceArr = new double[max]
+    double *priceArr = new double[max];
     // QOH pointer and array
     int *QOHArr = new int[max];
 
     while (choice != 6) {       // 6 is exit; skip this loop and return to OS
         switch (choice) {
             case 1:
-                addItem(prodIDArr, priceArr, QOHArr, filled, max);
+                addItem(prodIDArr, priceArr, QOHArr, items, max);
                 break;
-            case 2:
-                updateItem(prodIDArr, priceArr, filled);
+            /*case 2:
+                updateItem(prodIDArr, priceArr, items);
                 break;
             case 3:
-                updateItem(prodIDArr, QOHArr, filled);
+                updateItem(prodIDArr, QOHArr, items);
                 break;
             case 4:
-                displayItem(prodIDArr, priceArr, QOHArr, filled);
+                displayItem(prodIDArr, priceArr, QOHArr, items);
                 break;
             case 5:
-                printDB(prodIDArr, priceArr, QOHArr, filled);
-                break;
+                printDB(prodIDArr, priceArr, QOHArr, items);
+                break;*/
             default:
                 cerr << "Please make a valid choice.\n";
         }
@@ -114,18 +115,28 @@ int main()
 }
 
 // max is const because it is not to be changed inside this func
-void addItem(char **prodIDArr, double *priceArr, int *QOHArr, int *filled, const int max)
+void addItem(char **prodIDArr, double *priceArr, int *QOHArr, int &items, const int max)
 {
+    int col = 0;    // Prod ID input will always start at loc 0
     cout << "Product ID Numbers must be in the format of 2 letters followed by 2 numbers. Example: AA00\n";
 
-    while (*filled < max) {
+
+
+    while (items < max) {   // while the array has empty space
+
         for (int row = 0; row < max; row++) {
-            for (int col = 0; col < PRODIDLIM; col++) {
-                cout << "Item " << *(filled)+1 << " out of " << max << ". Enter 0000 to stop: ";
+            cout << "Item " << items+1 << " out of " << max << ". Enter 0000 to stop: ";
+            // if they do not want to continue
+            cin.getline(prodIDArr[row], PRODIDLIM);
+            items++;
+
+            if (strcmp(prodIDArr[row], "0000") == 0) {
+                items--;    // dont count the 0000
+                return;
             }
         }
-}
-    return 0;
+    }
+    return;
 }
 
 /*
@@ -162,15 +173,28 @@ void addItem(char *prodIDArr, double *priceArr, int *QOHArr, int &items, const i
 }
 */
 
-int findID(const char *prodIDArr, string findID, int filled)
+/*
+int findID(const char **prodIDArr, const int filled)
 {
     for (int i = 0; i < filled; i++)
         if (*(prodIDArr + i) == findID)
             return i;   // if it is found, return i
     return -1;          // -1 to know that product id wasn't found
 }
+*/
 
-void updateItem(const char *prodIDArr, double *priceArr, int filled)
+/*
+int findID(const char **prodIDArr, const string findMe, const int filled)
+{
+    for (int row = 0; row < filled; row++ {
+        for (int col = 0; col < PRODIDLIM; col++) {
+            if
+        }
+    }
+}
+*/
+/*
+void updateItem(const char **prodIDArr, double *priceArr, const int filled)
 {
     int editLoc;            // the index of item to be updated
     string editID;
@@ -191,8 +215,9 @@ void updateItem(const char *prodIDArr, double *priceArr, int filled)
         return;
     }
 }
-
-void updateItem(const char *prodIDArr, int *QOHArr, int filled)
+*/
+/*
+void updateItem(const char **prodIDArr, int *QOHArr, const int filled)
 {
     int editLoc;            // the index of item to be updated
     string editID;
@@ -213,8 +238,9 @@ void updateItem(const char *prodIDArr, int *QOHArr, int filled)
         return;
     }
 }
-
-void displayItem(const char *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
+*/
+/*
+void displayItem(const char **prodIDArr, const double *priceArr, const int *QOHArr, const int filled)
 {
     int loc;            // loc to be displayed
     string displayID;
@@ -234,8 +260,9 @@ void displayItem(const char *prodIDArr, const double *priceArr, const int *QOHAr
     return;
     }
 }
-
-void printDB(const char *prodIDArr, const double *priceArr, const int *QOHArr, int filled)
+*/
+/*
+void printDB(const char **prodIDArr, const double *priceArr, const int *QOHArr, const int filled)
 {
     cerr << setw(10) << "Item No. |" << setw(13) << " Product ID |"
          << setw(10) << " Price |" << setw(10) << " Quantity\n";
@@ -250,6 +277,7 @@ void printDB(const char *prodIDArr, const double *priceArr, const int *QOHArr, i
     cerr << endl;
     return;
 }
+*/
 
 int instructions()
 {
@@ -262,6 +290,7 @@ int instructions()
     cerr << endl;
     return decision;
 }
+
 /*
 bool dupeCheck(const string *prodIDArr, string &prodID, int currLoc)
 {
