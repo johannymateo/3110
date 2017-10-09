@@ -4,76 +4,83 @@
 
 #include <iostream>
 #include <string>
+#include <cstring>
+#include <cctype>
 #include <iomanip>
 using namespace std;
 
+
+const int DBMAX = 1000;
+const int PRODCHAR = 5;
+
 // fn to add items to arrays, returns nothing and
-// accepts ptr to phoneNameArr, ptr to priceArr, ptr to QOHArr,
-// counter of current arr loc, and dbmax
-void addItem(string *, double *, int *, int &, int);
+// accepts prodIDArr, prodNameArr,priceArr, QOHArr,
+// counter of current arr loc, and size of dynamic arrays
+void addItem(char [][PRODCHAR], string *, double *, int *, int &, int);
 // fn to find index of productID, retuns index as int,
-// accepts ptr to phoneNameArr, phoneName, up to where is the arr filled
-int findID(const string *, string, int);
+// accepts ptr to prodNameArr, prodName, and up to where is the arr filled
+int findID(const char [][PRODCHAR], char *, int);
 // fn to update price, returns nothing
-// accepts ptr to phoneNameArr, ptr to priceArr,array fill loc
-void updateItem(const string *, double *, int);
+// accepts ptr to prodNameArr, ptr to priceArr, and array fill loc
+void updateItem(const char [][PRODCHAR], double *, int);
 // fn to update quantity, returns nothing
-// accepts ptr to phoneNameArr, ptr to QOHArr, array fill loc
-void updateItem(const string *, int *, int);
+// accepts ptr to prodNameArr, ptr to QOHArr, and array fill loc
+void updateItem(const char [][PRODCHAR], int *, int);
 // fn to display item, returns nothing
-// accepts ptr to phoneNameArr, ptr to priceArr, ptr to QOHArr, array fill loc 
-void displayItem(const string *, const double *, const int *, int);
+// accepts ptr to prodNameArr, ptr to priceArr, ptr to QOHArr, and array fill loc
+void displayItem(const char [][PRODCHAR], const double *, const int *, int);
 // fn to print DB, returns nothing
-// accepts ptr to phoneNameArr, ptr to priceArr, ptr to QOHArr,
-// array fill loc
+// accepts ptr to prodNameArr, ptr to priceArr, ptr to QOHArr, and array fill loc
 void printDB(const string *, const double *, const int *, int);
 // fn to display switch instructions, returns choice, accepts nothing
 int instructions();
-// fn to check for and correct phoneName duplicate, returns true if it exists
-// accepts ptr to phoneNameArr, phoneName by reference,
-// arr insert loc
-bool dupeCheck(const string *, string &, int);
-// function to delete, phoneNameArr, accepts string for phoneName, and items #
-// function to growarray
-
-// phone name limit can only have 4 chars + null
-const int PRODCHAR = 5;
-const int DBMAX = 1000;
+// fn to check for and correct prodName duplicate, returns true if it exists
+// accepts ptr to prodNameArr, prodName by reference, and arr insert loc
+bool dupeCheck(char [][PRODCHAR], int);
+// fn to check prod id format. accepts prod id char ptr
+bool prodIDCheck(char [][PRODCHAR], int);
 
 int main()
 {
-     // items is used to keep track of up to where are the arrays are filled
-    int choice, items = 0, dynamicDBMax;
-    
-
-    cout << "How many items would you like to add: ";
-    cin >> dynamicDBMax;
-    cout << endl;
-
+    // items is used to keep track up to where the database is filled
+    int choice, items = 0, dynamicDBMAX;
     char prodIDArr[DBMAX][PRODCHAR];
-    string* phoneNameArr = new string[dynamicDBMax];
-    double* priceArr = new double[DBMAX];
-    int* QOHArr = new int[DBMAX];
-    
+    string prodNameArr[DBMAX];
+
+    // arrays on the stack have max 1000 locations
+    cerr << "How many items would you like to add (Up to 1000 items): ";
+    cin >> dynamicDBMAX;
+    cin.ignore();
+        while (dynamicDBMAX > 1000) {
+            cerr << "Please enter less than 1000 items.\n"
+                 << "How many items would you like to add: ";
+            cin >> dynamicDBMAX;
+            cin.ignore();
+        }
+    cerr << endl;
+
+    double* priceArr = new double[dynamicDBMAX];
+    int* QOHArr = new int[dynamicDBMAX];
+
     // print the menu instructions
     choice = instructions();
 
     while (choice != 6) {       // 6 is exit; skip this loop and return to OS
         switch (choice) {
             case 1:
-                addItem(phoneNameArr, priceArr, QOHArr, items, dynamicDBMax);
+                addItem(prodIDArr, prodNameArr, priceArr, QOHArr, items, dynamicDBMAX);
                 break;
             case 2:
-                updateItem(phoneNameArr, priceArr, items);
+                updateItem(prodIDArr, priceArr, items);
                 break;
             case 3:
-                updateItem(phoneNameArr, QOHArr, items);
+                updateItem(prodIDArr, QOHArr, items);
                 break;
             case 4:
-                displayItem(phoneNameArr, priceArr, QOHArr, items);
+                displayItem(prodIDArr, priceArr, QOHArr, items);
                 break;
             case 5:
-                printDB(phoneNameArr, priceArr, QOHArr, items);
+                printDB(prodNameArr, priceArr, QOHArr, items);
                 break;
             default:
                 cerr << "Please make a valid choice.\n";
@@ -81,8 +88,7 @@ int main()
         choice = instructions();    // bring up menu again
     }
 
-    delete [] phoneNameArr;
-    phoneNameArr = NULL;
+    // delete things on the heap and reset dangling pointers
     delete [] priceArr;
     priceArr = NULL;
     delete [] QOHArr;
@@ -91,115 +97,130 @@ int main()
     return 0;
 }
 
-void addItem(string *phoneNameArr, double *priceArr, int *QOHArr, int &items, int max)
+void addItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, int *QOHArr, int &items, int max)
 {
-    char ans; // ans is to keep adding items
     bool dupe;  // is there an uncorrected duplicate?
-    string phoneName;
+    bool cont;   // continue entry?
+    string prodName;
 
-    // while we are in the bounds of the array, they want to continue, and there are no duplicates (or corrected ones):
-    while ((items < max) && (phoneName != "0") && (!dupe)) {
-        cerr << "Item " << items+1 << " - Enter the phone name, 0 to stop: ";
-        cin >> phoneName;
+    cerr << "The product ID must be 4 characters. Two letters, followed by 2 numbers.\n";
 
-        dupe = dupeCheck(phoneNameArr, phoneName, items);
-        // if dupe is false, there are no dupes, continue with entry, else
-        // skip this; while loop will also be false, and fn will return
-        if (!dupe) {         // there is no dupe, add this phoneName
-            *(phoneNameArr + items) = phoneName;
-            cerr << "Enter the price: ";
-            cin >> *(priceArr + items);
-            cerr << "Enter the quantity: ";
-            cin >> *(QOHArr + items);
-            cout << endl;
-            items++;        // go to next array location
+    // while we are in the bounds of the array, they want to continue, and there are no duplicates (or they were corrected):
+    while ((items < max) && (cont) && (!dupe)) {
+
+        cerr << "Item " << items+1 << endl;
+
+        // input product ID and make sure it is correct format
+        // returns false if they want to stop entry
+        cont = prodIDCheck(prodIDArr, items);
+
+        if (cont) {
+            dupe = dupeCheck(prodIDArr, items);
+            // if dupe is false, there are no dupes, continue with entry, else
+            // skip this; while loop will also be false, and fn will return
+            if (!dupe) {         // there is no dupe, add this prodID
+                cerr << "Enter the product name: ";
+                getline(cin, *(prodNameArr + items));
+                cerr << "Enter the price: ";
+                cin >> *(priceArr + items);
+                cin.ignore();
+                cerr << "Enter the quantity: ";
+                cin >> *(QOHArr + items);
+                cin.ignore();
+                cerr << endl;
+                items++;        // go to next array location
+            }
         }
     }
     cerr << endl;
     return;
 }
 
-int findID(const string *phoneNameArr, string findID, int filled)
+int findID(const char prodIDArr[][PRODCHAR], char *findID, int filled)
 {
-    for (int i = 0; i < filled; i++)
-        if (*(phoneNameArr + i) == findID)
-            return i;   // if it is found, return i
+    for (int row = 0; row < filled; row++)
+        if ( strcmp(prodIDArr[row], findID) == 0)
+            return row;   // if it is found, return that row
     return -1;          // -1 to know that product id wasn't found
 }
 
-void updateItem(const string *phoneNameArr, double *priceArr, int filled)
+void updateItem(const char prodIDArr[][PRODCHAR], double *priceArr, int filled)
 {
-    int editLoc;            // the index of item to be updated
-    string editID;
+    int editLoc;            // row of item to be updated
+    char editID[PRODCHAR];
 
-    cerr << "What is the phone name: ";
+    cerr << "What is the product ID: ";
     cin >> editID;
-    editLoc = findID(phoneNameArr, editID, filled);
+    cin.ignore();
+    editLoc = findID(prodIDArr, editID, filled);
 
     if (editLoc == -1) {            // ID not found
-        cerr << "Phone name not found.\n\n";
+        cerr << "Product ID not found.\n\n";
         return;
     }
     else {
         cerr << "Enter the new price: ";
         cin >> *(priceArr + editLoc);
-        cerr << "\nProduct ID: "<< *(phoneNameArr + editLoc)
+        cin.ignore();
+        cerr << "\nProduct ID: "<< prodIDArr[editLoc]
              << "\nUpdated price: " << *(priceArr + editLoc) << "\n\n";
         return;
     }
 }
 
-void updateItem(const string *phoneNameArr, int *QOHArr, int filled)
+void updateItem(const char prodIDArr[][PRODCHAR], int *QOHArr, int filled)
 {
-    int editLoc;            // the index of item to be updated
-    string editID;
+    int editLoc;            // row of item to be updated
+    char editID[PRODCHAR];
 
-    cerr << "What is the phone name: ";
+    cerr << "What is the product name: ";
     cin >> editID;
-    editLoc = findID(phoneNameArr, editID, filled);
+    cin.ignore();
+    editLoc = findID(prodIDArr, editID, filled);
 
     if (editLoc == -1) {            // ID not found
-        cerr << "Phone name not found.\n\n";
+        cerr << "Product ID not found.\n\n";
         return;
     }
     else {
         cerr << "Enter the new quantity: ";
         cin >> *(QOHArr + editLoc);
-        cerr << "\nProduct ID: " << *(phoneNameArr + editLoc)
+        cin.ignore();
+        cerr << "\nProduct name: " << prodIDArr[editLoc]
              << "\nUpdated quantity: " << *(QOHArr + editLoc) << "\n\n";
         return;
     }
 }
 
-void displayItem(const string *phoneNameArr, const double *priceArr, const int *QOHArr, int filled)
+void displayItem(const char prodIDArr[][PRODCHAR], const double *priceArr, const int *QOHArr, int filled)
 {
     int loc;            // loc to be displayed
-    string displayID;
+    char displayID[PRODCHAR];
 
-    cerr << "What is the phone name: ";
-    cin >> displayID;
-    loc = findID(phoneNameArr, displayID, filled);
+    cerr << "What is the product ID: ";
+    cin.getline(displayID, PRODCHAR);
+    loc = findID(prodIDArr, displayID, filled);
 
     if (loc == -1) {        // ID not found
-        cerr << "Phone name not found.\n\n";
+        cerr << "Product name not found.\n\n";
         return;
     }
     else {
-        cerr << "\nProduct ID: " << *(phoneNameArr + loc) << "\nPrice: "
+        cerr << "\nProduct name: " << prodIDArr[loc] << "\nPrice: "
              << *(priceArr + loc) << "\nQuantity: " << *(QOHArr + loc)
              << "\n\n";
     return;
     }
 }
 
-void printDB(const string *phoneNameArr, const double *priceArr, const int *QOHArr, int filled)
+void printDB(const string *prodNameArr, const double *priceArr, const int *QOHArr, int filled)
 {
-    cerr << setw(10) << "Item No. |" << setw(13) << " Phone name |"
+    cerr << setw(10) << "Item No. |" << setw(13) << " Product name |"
          << setw(10) << " Price |" << setw(10) << " Quantity\n";
     cerr << "------------------------------------------\n";
 
     for (int i = 0; i < filled; i++) {
-        cerr << setw(8) << i+1 << " | " << setw(13) << *(phoneNameArr + i) + " | "
+        cerr << setw(8) << i+1 << " | " << setw(13) << *(prodNameArr + i) + " | "
              << setw(7) << setprecision(2) << fixed << *(priceArr + i) << " | "
              << setw(8) << *(QOHArr + i) << endl;
     }
@@ -216,26 +237,31 @@ int instructions()
          << "5. Print Database" << endl << "6. Exit Program" << endl
          << "Make a choice: ";
     cin >> decision;
+    cin.ignore();
     cerr << endl;
     return decision;
 }
 
-bool dupeCheck(const string *phoneNameArr, string &phoneName, int currLoc)
+bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
 {
     char ans;           // enter new ID?
     bool exists;        // does a dupe exist?
+    char prodID[PRODCHAR];
+    strcpy(prodID, prodIDArr[currLoc]);
 
     do {
-        // -1 means phoneName doesn't exist
-        if (findID(phoneNameArr, phoneName, currLoc) != -1) {
+        // -1 means prodName doesn't exist
+        if (findID(prodIDArr, prodID, currLoc) != -1) {
             exists = true;
             cerr << "This item already exists."
-                 << " Would you like to input a new phone name? (Y/N): ";
+                 << " Would you like to input a new product ID? (Y/N): ";
             cin >> ans;
+            cin.ignore();
 
             if (ans == 'y' || ans == 'Y') {
-                cerr << "Item " << currLoc + 1 << " - Enter the phone name: ";
-                cin >> phoneName;
+                //cerr << "Item " << currLoc + 1 << " - Enter the product name: ";
+                //cin >> prodID;
+                prodIDCheck(prodIDArr, currLoc);
             }
         }
         else
@@ -245,8 +271,30 @@ bool dupeCheck(const string *phoneNameArr, string &phoneName, int currLoc)
 
     if (exists)         // there is an uncorrected dupe, return true
         return true;
-    else                // there are no dupes, or it was corrected, return false
+    else    // dupe was corrected, continue
         return false;
 }
 
+bool prodIDCheck(char prodIDArr[][PRODCHAR], int row)
+{
+    cerr << "Enter the product ID, 0000 to stop entry: ";
+    cin.getline(prodIDArr[row], PRODCHAR);
 
+    if ( strcmp(prodIDArr[row], "0000") == 0)
+        return false;   // return, they do not want to continue
+    else /*{
+        while ( !(// first 2 chars are not letters
+                (isalpha(prodIDArr[row][1]) != 0) &&
+                (isalpha(prodIDArr[row][2]) != 0) &&
+                // the last 2 chars are not numbers
+                (isdigit(prodIDArr[row][3]) != 0) &&
+                (isdigit(prodIDArr[row][4]) != 0)) ){
+
+            cerr << "Please enter 4 characters in the format AA00: ";
+            cin.getline(prodIDArr[row], PRODCHAR);
+        }
+        cin.getline(prodIDArr[row], PRODCHAR);
+    }*/
+    // they want to continue and entry is correct, return
+    return true;
+}
