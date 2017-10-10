@@ -27,7 +27,10 @@ void updateItem(const char [][PRODCHAR], double *, int);
 void updateItem(const char [][PRODCHAR], int *, int);
 // fn to display item, returns nothing
 // accepts ptr to prodNameArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void displayItem(const char [][PRODCHAR], const double *, const int *, int);
+void displayID(const char [][PRODCHAR], const string *, const double *, const int *, int);
+// fn to display query results, accepts all arrays, for loop i location, and fill
+// returns nothing
+void printQueryResults(const char [][PRODCHAR], const string *, const double *, const int *, int, int);
 // fn to print DB, returns nothing
 // accepts ptr to prodNameArr, ptr to priceArr, ptr to QOHArr, and array fill loc
 void printDB(const char [][PRODCHAR], const string *, const double *, const int *, int);
@@ -37,11 +40,16 @@ int instructions();
 // accepts ptr to prodNameArr, prodName by reference, and arr insert loc
 bool dupeCheck(char [][PRODCHAR], int);
 // fn to check prod id format. accepts prod id char ptr
-bool prodIDCheck(char [][PRODCHAR], int);
+void prodIDCheck(char [][PRODCHAR], int);
 // fn to delete item. Takes prodID, prodName, price, QOH, and filled
 void deleteItem(char [][PRODCHAR], string *, double*, int *, int &);
 // fn to grow price array
 double *growArray(double *, int);
+//fn to query databse
+void queryDB(const char [][PRODCHAR], const string *, const double *, const int *, int);
+// fn to print query switch instructions
+int queryInstructions();
+void printTableHeading();
 
 int main()
 {
@@ -83,7 +91,7 @@ int main()
                 updateItem(prodIDArr, QOHArr, items);
                 break;
             case 4:
-                displayItem(prodIDArr, priceArr, QOHArr, items);
+                queryDB(prodIDArr, prodNameArr, priceArr, QOHArr, items);
                 break;
             case 5:
                 printDB(prodIDArr, prodNameArr, priceArr, QOHArr, items);
@@ -109,7 +117,6 @@ void addItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, 
 {
     bool dupe;  // is there an uncorrected duplicate?
     bool cont;   // continue entry?
-    string prodName;
 
     cerr << "The product ID must be 4 characters. Two letters, followed by 2 numbers.\n";
 
@@ -120,7 +127,13 @@ void addItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, 
 
         // input product ID and make sure it is correct format
         // returns false if they want to stop entry
-        cont = prodIDCheck(prodIDArr, items);
+        cerr << "Enter the product ID, 0000 to stop entry: ";
+        cin.getline(prodIDArr[items], PRODCHAR);
+
+        if ( strcmp(prodIDArr[items], "0000") == 0)
+            cont = false;   // they do not want to continue
+        else
+            prodIDCheck(prodIDArr, items);  // make sure it is a valid prodID
 
         if (cont) {
             dupe = dupeCheck(prodIDArr, items);
@@ -198,7 +211,7 @@ void updateItem(const char prodIDArr[][PRODCHAR], int *QOHArr, int filled)
     }
 }
 
-void displayItem(const char prodIDArr[][PRODCHAR], const double *priceArr, const int *QOHArr, int filled)
+void displayID(const char prodIDArr[][PRODCHAR], const string *prodName, const double *priceArr, const int *QOHArr, int filled)
 {
     int loc;            // loc to be displayed
     char displayID[PRODCHAR];
@@ -208,25 +221,24 @@ void displayItem(const char prodIDArr[][PRODCHAR], const double *priceArr, const
     loc = findID(prodIDArr, displayID, filled);
 
     if (loc == -1) {        // ID not found
-        cerr << "Product name not found.\n\n";
+        cerr << "The product ID was not found.\n\n";
         return;
     }
     else {
-        cerr << "\nProduct name: " << prodIDArr[loc] << "\nPrice: "
-             << *(priceArr + loc) << "\nQuantity: " << *(QOHArr + loc)
-             << "\n\n";
+        cerr << "\nProduct ID: " << prodIDArr[loc]
+             << "\nProduct Name: " << *(prodName +loc)
+             << "\nPrice: " << *(priceArr + loc)
+             << "\nQuantity: " << *(QOHArr + loc) << "\n\n";
     return;
     }
 }
 
 void printDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int filled)
 {
-    cerr << setw(10) << "Product ID. |" << setw(13) << " Product Name |"
-         << setw(10) << " Price |" << setw(10) << " Quantity\n";
-    cerr << "------------------------------------------\n";
+    printTableHeading();
 
     for (int i = 0; i < filled; i++) {
-        cerr << setw(8) << prodIDArr[i] << " | " << setw(13) << *(prodNameArr + i) + " | "
+        cerr << setw(5) << prodIDArr[i] << " | " << setw(13) << *(prodNameArr + i) + " | "
              << setw(7) << setprecision(2) << fixed << *(priceArr + i) << " | "
              << setw(8) << *(QOHArr + i) << endl;
     }
@@ -239,9 +251,24 @@ int instructions()
 {
     int decision;
     cerr << "1. Add Item" << endl << "2. Update Item Price" << endl
-         << "3. Update Item Quantity" << endl << "4. Display Item" << endl
+         << "3. Update Item Quantity" << endl << "4. Query Database" << endl
          << "5. Print Database" << endl << "6. Delete Item" << endl
          << "7. Exit Program" << endl
+         << "Make a choice: ";
+    cin >> decision;
+    cin.ignore();
+    cerr << endl;
+    return decision;
+}
+
+int queryInstructions()
+{
+    int decision;
+    cerr << "1. Display by Product ID" << endl
+         << "2. Display by Product Name" << endl
+         << "3. Display by Price" << endl
+         << "4. Display by Quantity on Hand" << endl
+         << "5. Return to Previous Menu" << endl
          << "Make a choice: ";
     cin >> decision;
     cin.ignore();
@@ -282,29 +309,22 @@ bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
         return false;
 }
 
-bool prodIDCheck(char prodIDArr[][PRODCHAR], int row)
-{
-    cerr << "Enter the product ID, 0000 to stop entry: ";
-    cin.getline(prodIDArr[row], PRODCHAR);
+void prodIDCheck(char prodIDArr[][PRODCHAR], int row)
+{/*
+    while ( !(// first 2 chars are not letters            (isalpha(prodIDArr[row][1]) != 0) &&
+        (isalpha(prodIDArr[row][2]) != 0) &&
+        // the last 2 chars are not numbers
+        (isdigit(prodIDArr[row][3]) != 0) &&
+        (isdigit(prodIDArr[row][4]) != 0)) ) {
 
-    if ( strcmp(prodIDArr[row], "0000") == 0)
-        return false;   // return, they do not want to continue
-    /*else {
-        while ( !(// first 2 chars are not letters
-                (isalpha(prodIDArr[row][1]) != 0) &&
-                (isalpha(prodIDArr[row][2]) != 0) &&
-                // the last 2 chars are not numbers
-                (isdigit(prodIDArr[row][3]) != 0) &&
-                (isdigit(prodIDArr[row][4]) != 0)) ){
-
-            cerr << "Please enter 4 characters in the format AA00: ";
-            cin.getline(prodIDArr[row], PRODCHAR);
+        cerr << "Please enter 4 characters in the format AA00: ";
+        cin.getline(prodIDArr[row], PRODCHAR);
         }
+    return
     }*/
-    // they want to continue and entry is correct, return
-    return true;
 }
 
+//TODO: FIX
 void deleteItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, int *QOHArr, int &items)
 {
     int deleteLoc;
@@ -318,15 +338,15 @@ void deleteItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceAr
         cerr << "Product ID not found.\n\n";
         return;
     }
-    else {  // rewrite the item to be deleted with the last loc
-        // overwrite the delete location with the last location
-        strcpy(prodIDArr[deleteLoc], prodIDArr[items]);
-        *(prodNameArr + deleteLoc) = *(prodNameArr + items);
-        *(priceArr + deleteLoc) = *(priceArr + items);
-        *(QOHArr + deleteLoc) = *(QOHArr + items);
+    else {
+        // overwrite the delete location with the last filled location
+        strcpy(prodIDArr[deleteLoc], prodIDArr[items-1]);
+        *(prodNameArr + deleteLoc) = *(prodNameArr + (items-1));
+        *(priceArr + deleteLoc) = *(priceArr + (items-1));
+        *(QOHArr + deleteLoc) = *(QOHArr + (items-1));
         // -1 item
         items--;
-        cout << "Item deleted.\n";
+        cerr << "Item deleted.\n";
         return;
     }
 }
@@ -344,4 +364,105 @@ double *growArray(double *priceArr, int size)
     delete [] priceArr;
     // return the new array
     return priceArrGrown;
+}
+
+void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int filled)
+{
+    // display menu and get choice
+    int choice = queryInstructions(), QOHMin, QOHMax;
+    string prodName;
+    double priceMin, priceMax;
+    bool found;     // was their query found?
+
+    while (choice != 5) { // 5 is to return to previous menu
+        switch (choice) {
+            case 1:
+                displayID(prodIDArr, prodNameArr, priceArr, QOHArr, filled);
+                break;
+            case 2:
+                cerr << "What is the product name: ";
+                getline(cin, prodName);
+
+                printTableHeading();
+                found = false;  // it has not been found yet
+                for (int i = 0; i < filled; i++) {
+                    if (*(prodNameArr + i) == prodName) {
+
+                    found = true;   // ID is a match, print the info
+                    printQueryResults(prodIDArr, prodNameArr, priceArr, QOHArr, i, filled);
+                    }
+                }
+
+                if (!found)
+                    cerr << "No product with that name was found.";
+
+                cout << endl << endl;
+                break;
+            case 3:
+                cerr << "What is the minimum price: ";
+                cin >> priceMin;
+                cin.ignore();
+                cerr << "What is the maximum price: ";
+                cin >> priceMax;
+                cin.ignore();
+
+                printTableHeading();
+                found = false;  // it has not been found yet
+                for (int i = 0; i < filled; i++) {
+                    if ( (*(priceArr + i) >= priceMin) && (*(priceArr + i) <= priceMax) ) {
+
+                    found = true;   // ID is a match, print the info
+                    printQueryResults(prodIDArr, prodNameArr, priceArr, QOHArr, i, filled);
+                    }
+                }
+
+                if (!found)
+                    cerr << "No product within that price range was found.";
+
+                cout << endl << endl;
+                break;
+            case 4:
+                cerr << "What is the minimum quantity: ";
+                cin >> QOHMin;
+                cin.ignore();
+                cerr << "What is the maximum quantity: ";
+                cin >> QOHMax;
+                cin.ignore();
+
+                printTableHeading();
+                found = false;  // it has not been found yet
+                for (int i = 0; i < filled; i++) {
+                    if ( (*(QOHArr + i) >= QOHMin) && (*(QOHArr + i) <= QOHMax) ) {
+                    found = true;   // ID is a match, print the info
+                    printQueryResults(prodIDArr, prodNameArr, priceArr, QOHArr, i, filled);
+                    }
+                }
+
+                if (!found)
+                    cerr << "No product within that price range was found.";
+
+                cout << endl << endl;
+                break;
+            default:
+                cerr << "Please make a valid choice.\n";
+        }
+        choice = queryInstructions();   // bring up menu again
+    }
+    return;
+}
+void printQueryResults(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int i, int filled) {
+    cerr << setw(5) << prodIDArr[i] << " | " << setw(13)
+         << *(prodNameArr + i) + " | " << setw(7)
+         << setprecision(2) << fixed << *(priceArr + i) << " | "
+         << setw(8) << *(QOHArr + i);
+
+    cerr << endl;
+    return;
+}
+void printTableHeading()
+{
+    cerr << setw(13) << "Product ID |" << setw(13) << " Product Name |"
+        << setw(13) << " Price |" << setw(13) << " Quantity\n";
+    cerr << "------------------------------------------\n";
+    return;
 }
