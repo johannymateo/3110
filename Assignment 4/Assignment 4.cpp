@@ -1,6 +1,5 @@
 // Johanny Mateo
-// CISC 3110 - Assignment 3
-// Change function arrays to pointers
+// CISC 3110 - Assignment 4
 
 #include <iostream>
 #include <string>
@@ -31,7 +30,7 @@ void updateItem(const char [][PRODCHAR], int *, int);
 void displayItem(const char [][PRODCHAR], const double *, const int *, int);
 // fn to print DB, returns nothing
 // accepts ptr to prodNameArr, ptr to priceArr, ptr to QOHArr, and array fill loc
-void printDB(const string *, const double *, const int *, int);
+void printDB(const char [][PRODCHAR], const string *, const double *, const int *, int);
 // fn to display switch instructions, returns choice, accepts nothing
 int instructions();
 // fn to check for and correct prodName duplicate, returns true if it exists
@@ -39,6 +38,10 @@ int instructions();
 bool dupeCheck(char [][PRODCHAR], int);
 // fn to check prod id format. accepts prod id char ptr
 bool prodIDCheck(char [][PRODCHAR], int);
+// fn to delete item. Takes prodID, prodName, price, QOH, and filled
+void deleteItem(char [][PRODCHAR], string *, double*, int *, int &);
+// fn to grow price array
+double *growArray(double *, int);
 
 int main()
 {
@@ -59,13 +62,16 @@ int main()
         }
     cerr << endl;
 
+    // create arrays on the heap
     double* priceArr = new double[dynamicDBMAX];
+    // grow the price array
+    priceArr = growArray(priceArr, dynamicDBMAX);
     int* QOHArr = new int[dynamicDBMAX];
 
     // print the menu instructions
     choice = instructions();
 
-    while (choice != 6) {       // 6 is exit; skip this loop and return to OS
+    while (choice != 7) {       // 7 is exit; skip this loop and return to OS
         switch (choice) {
             case 1:
                 addItem(prodIDArr, prodNameArr, priceArr, QOHArr, items, dynamicDBMAX);
@@ -80,15 +86,17 @@ int main()
                 displayItem(prodIDArr, priceArr, QOHArr, items);
                 break;
             case 5:
-                printDB(prodNameArr, priceArr, QOHArr, items);
+                printDB(prodIDArr, prodNameArr, priceArr, QOHArr, items);
                 break;
+            case 6:
+                deleteItem(prodIDArr, prodNameArr, priceArr, QOHArr, items);
             default:
                 cerr << "Please make a valid choice.\n";
         }
         choice = instructions();    // bring up menu again
     }
 
-    // delete things on the heap and reset dangling pointers
+    // delete things on the heap and nullify dangling pointers
     delete [] priceArr;
     priceArr = NULL;
     delete [] QOHArr;
@@ -150,8 +158,7 @@ void updateItem(const char prodIDArr[][PRODCHAR], double *priceArr, int filled)
     char editID[PRODCHAR];
 
     cerr << "What is the product ID: ";
-    cin >> editID;
-    cin.ignore();
+    cin.getline(editID, PRODCHAR);
     editLoc = findID(prodIDArr, editID, filled);
 
     if (editLoc == -1) {            // ID not found
@@ -174,8 +181,7 @@ void updateItem(const char prodIDArr[][PRODCHAR], int *QOHArr, int filled)
     char editID[PRODCHAR];
 
     cerr << "What is the product name: ";
-    cin >> editID;
-    cin.ignore();
+    cin.getline(editID, PRODCHAR);
     editLoc = findID(prodIDArr, editID, filled);
 
     if (editLoc == -1) {            // ID not found
@@ -213,14 +219,14 @@ void displayItem(const char prodIDArr[][PRODCHAR], const double *priceArr, const
     }
 }
 
-void printDB(const string *prodNameArr, const double *priceArr, const int *QOHArr, int filled)
+void printDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int filled)
 {
-    cerr << setw(10) << "Item No. |" << setw(13) << " Product name |"
+    cerr << setw(10) << "Product ID. |" << setw(13) << " Product Name |"
          << setw(10) << " Price |" << setw(10) << " Quantity\n";
     cerr << "------------------------------------------\n";
 
     for (int i = 0; i < filled; i++) {
-        cerr << setw(8) << i+1 << " | " << setw(13) << *(prodNameArr + i) + " | "
+        cerr << setw(8) << prodIDArr[i] << " | " << setw(13) << *(prodNameArr + i) + " | "
              << setw(7) << setprecision(2) << fixed << *(priceArr + i) << " | "
              << setw(8) << *(QOHArr + i) << endl;
     }
@@ -234,7 +240,8 @@ int instructions()
     int decision;
     cerr << "1. Add Item" << endl << "2. Update Item Price" << endl
          << "3. Update Item Quantity" << endl << "4. Display Item" << endl
-         << "5. Print Database" << endl << "6. Exit Program" << endl
+         << "5. Print Database" << endl << "6. Delete Item" << endl
+         << "7. Exit Program" << endl
          << "Make a choice: ";
     cin >> decision;
     cin.ignore();
@@ -246,11 +253,11 @@ bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
 {
     char ans;           // enter new ID?
     bool exists;        // does a dupe exist?
-    char prodID[PRODCHAR];
-    strcpy(prodID, prodIDArr[currLoc]);
+    char prodID[PRODCHAR];  // to be sent to the find fn
 
     do {
-        // -1 means prodName doesn't exist
+        strcpy(prodID, prodIDArr[currLoc]);
+        // -1 means prodName doesn't exist, if it is 0000, they want to return
         if (findID(prodIDArr, prodID, currLoc) != -1) {
             exists = true;
             cerr << "This item already exists."
@@ -258,9 +265,9 @@ bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
             cin >> ans;
             cin.ignore();
 
+            // they want to try again, promt to enter a product ID again
             if (ans == 'y' || ans == 'Y') {
-                //cerr << "Item " << currLoc + 1 << " - Enter the product name: ";
-                //cin >> prodID;
+                // reenter product ID
                 prodIDCheck(prodIDArr, currLoc);
             }
         }
@@ -282,7 +289,7 @@ bool prodIDCheck(char prodIDArr[][PRODCHAR], int row)
 
     if ( strcmp(prodIDArr[row], "0000") == 0)
         return false;   // return, they do not want to continue
-    else /*{
+    /*else {
         while ( !(// first 2 chars are not letters
                 (isalpha(prodIDArr[row][1]) != 0) &&
                 (isalpha(prodIDArr[row][2]) != 0) &&
@@ -293,8 +300,48 @@ bool prodIDCheck(char prodIDArr[][PRODCHAR], int row)
             cerr << "Please enter 4 characters in the format AA00: ";
             cin.getline(prodIDArr[row], PRODCHAR);
         }
-        cin.getline(prodIDArr[row], PRODCHAR);
     }*/
     // they want to continue and entry is correct, return
     return true;
+}
+
+void deleteItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, int *QOHArr, int &items)
+{
+    int deleteLoc;
+    char deleteID[PRODCHAR];
+
+    cerr << "What is the product ID: ";
+    cin.getline(deleteID, PRODCHAR);
+    deleteLoc = findID(prodIDArr, deleteID, items);
+
+    if (deleteLoc == -1) {
+        cerr << "Product ID not found.\n\n";
+        return;
+    }
+    else {  // rewrite the item to be deleted with the last loc
+        // overwrite the delete location with the last location
+        strcpy(prodIDArr[deleteLoc], prodIDArr[items]);
+        *(prodNameArr + deleteLoc) = *(prodNameArr + items);
+        *(priceArr + deleteLoc) = *(priceArr + items);
+        *(QOHArr + deleteLoc) = *(QOHArr + items);
+        // -1 item
+        items--;
+        cout << "Item deleted.\n";
+        return;
+    }
+}
+
+double *growArray(double *priceArr, int size)
+{
+    // create a new array with twice the size
+    double *priceArrGrown = new double[size*2];
+
+    // copy everything from old array to new array
+    for (int i = 0; i < size*2; i++)
+        *(priceArrGrown + i) = *(priceArr + i);
+
+    // old array has been copied over, delete it from the heap
+    delete [] priceArr;
+    // return the new array
+    return priceArrGrown;
 }
