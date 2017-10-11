@@ -454,6 +454,7 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
     }
     return;
 }
+
 void printQueryResults(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int i, int filled) {
     cerr << setw(11) << prodIDArr[i] << " | " << setw(15)
          << *(prodNameArr + i) + " | " << setw(10)
@@ -461,6 +462,7 @@ void printQueryResults(const char prodIDArr[][PRODCHAR], const string *prodNameA
          << setw(8) << *(QOHArr + i);
     return;
 }
+
 void printTableHeading()
 {
     cerr << endl;
