@@ -1,0 +1,351 @@
+How many items would you like to add (Up to 1000 items): 2000
+Please enter less than 1000 items.
+How many items would you like to add: 1000
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Please note that product ID's will automatically be converted into upper case characters.
+
+Item 1
+Enter the product ID, 0000 to stop entry: aa01
+Enter the product name: iPhone 01
+Enter the price: 346
+Enter the quantity: 2354
+
+Item 2
+Enter the product ID, 0000 to stop entry: gx01
+Enter the product name: Galaxy
+Enter the price: 459
+Enter the quantity: 4535
+
+Item 3
+Enter the product ID, 0000 to stop entry: nk01
+Enter the product name: Nokia
+Enter the price: 835
+Enter the quantity: 3453
+
+Item 4
+Enter the product ID, 0000 to stop entry: aa02
+Enter the product name: iPhone 02
+Enter the price: 781
+Enter the quantity: 9345
+
+Item 5
+Enter the product ID, 0000 to stop entry: gx02
+Enter the product name: Galaxy
+Enter the price: 193
+Enter the quantity: 4502
+
+Item 6
+Enter the product ID, 0000 to stop entry: aa03
+Enter the product name: iPhone
+Enter the price: 892
+Enter the quantity: 1243
+
+Item 7
+Enter the product ID, 0000 to stop entry: aa04
+Enter the product name: iPhone
+Enter the price: 793
+Enter the quantity: 8162
+
+Item 8
+Enter the product ID, 0000 to stop entry: gx03
+Enter the product name: Galaxy 03
+Enter the price: 752
+Enter the quantity: 852
+
+Item 9
+Enter the product ID, 0000 to stop entry: n10k
+Please enter 4 characters in the format AA00: 01nk
+Please enter 4 characters in the format AA00: nk01
+This item already exists. Would you like to input a new product ID? (Y/N): n
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Please note that product ID's will automatically be converted into upper case characters.
+
+Item 9
+Enter the product ID, 0000 to stop entry: nk01
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Enter the new product ID: aa03
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Enter the new product ID: nk02
+Enter the product name: Nokia 02
+Enter the price: 753
+Enter the quantity: 93
+
+Item 10
+Enter the product ID, 0000 to stop entry: 0000
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Please note that product ID's will automatically be converted into upper case characters.
+
+Item 10
+Enter the product ID, 0000 to stop entry: ht01
+Enter the product name: HTC
+Enter the price: 459
+Enter the quantity: 9154
+
+Item 11
+Enter the product ID, 0000 to stop entry: ht02
+Enter the product name: HTC
+Enter the price: 830
+Enter the quantity: 1542
+
+Item 12
+Enter the product ID, 0000 to stop entry: 0000
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       AA01 |    iPhone 01 |     346.00 |     2354
+       GX01 |       Galaxy |     459.00 |     4535
+       NK01 |        Nokia |     835.00 |     3453
+       AA02 |    iPhone 02 |     781.00 |     9345
+       GX02 |       Galaxy |     193.00 |     4502
+       AA03 |       iPhone |     892.00 |     1243
+       AA04 |       iPhone |     793.00 |     8162
+       GX03 |    Galaxy 03 |     752.00 |      852
+       NK02 |     Nokia 02 |     753.00 |       93
+       HT01 |          HTC |     459.00 |     9154
+       HT02 |          HTC |     830.00 |     1542
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: 76gh
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: HT02
+Item deleted.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       AA01 |    iPhone 01 |     346.00 |     2354
+       GX01 |       Galaxy |     459.00 |     4535
+       NK01 |        Nokia |     835.00 |     3453
+       AA02 |    iPhone 02 |     781.00 |     9345
+       GX02 |       Galaxy |     193.00 |     4502
+       AA03 |       iPhone |     892.00 |     1243
+       AA04 |       iPhone |     793.00 |     8162
+       GX03 |    Galaxy 03 |     752.00 |      852
+       NK02 |     Nokia 02 |     753.00 |       93
+       HT01 |          HTC |     459.00 |     9154
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Please note that product ID's will automatically be converted into upper case characters.
+
+Item 11
+Enter the product ID, 0000 to stop entry: nk03
+Enter the product name: Nokia
+Enter the price: 574
+Enter the quantity: 3492
+
+Item 12
+Enter the product ID, 0000 to stop entry: 0000
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 2
+
+What is the product ID: hu43
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 2
+
+What is the product ID: HT01
+Enter the new price: 184
+
+Product ID: HT01
+Updated price: 184.00
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: AA01
+Enter the new quantity: 6324
+
+Product ID: AA01
+Updated quantity: 6324
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 4
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: hy67
+The product ID was not found.
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: GX01
+
+Product ID: GX01
+Product Name: Galaxy
+Price: 459.00
+Quantity: 4535
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 2
+
+What is the product ID: Galaxy
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       GX01 |       Galaxy |     459.00 |     4535
+       GX02 |       Galaxy |     193.00 |     4502
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 3
+
+What is the minimum price: 500
+What is the maximum price: 1000
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       NK01 |        Nokia |     835.00 |     3453
+       AA02 |    iPhone 02 |     781.00 |     9345
+       AA03 |       iPhone |     892.00 |     1243
+       AA04 |       iPhone |     793.00 |     8162
+       GX03 |    Galaxy 03 |     752.00 |      852
+       NK02 |     Nokia 02 |     753.00 |       93
+       NK03 |        Nokia |     574.00 |     3492
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 4
+
+What is the minimum quantity: 0
+What is the maximum quantity: 1000
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       GX03 |    Galaxy 03 |     752.00 |      852
+       NK02 |     Nokia 02 |     753.00 |       93
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 5
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 7

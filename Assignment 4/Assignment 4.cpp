@@ -43,12 +43,13 @@ bool dupeCheck(char [][PRODCHAR], int);
 void prodIDCheck(char [][PRODCHAR], int);
 // fn to delete item. Takes prodID, prodName, price, QOH, and filled
 void deleteItem(char [][PRODCHAR], string *, double*, int *, int &);
-// fn to grow price array
+// fn to grow then return price array, also accepts dynamic size
 double *growArray(double *, int);
-//fn to query databse
+//fn to query databse, accepts all arrays and fill value
 void queryDB(const char [][PRODCHAR], const string *, const double *, const int *, int);
 // fn to print query switch instructions
 int queryInstructions();
+//function to print table heading in output
 void printTableHeading();
 
 int main()
@@ -98,6 +99,7 @@ int main()
                 break;
             case 6:
                 deleteItem(prodIDArr, prodNameArr, priceArr, QOHArr, items);
+                break;
             default:
                 cerr << "Please make a valid choice.\n";
         }
@@ -118,7 +120,7 @@ void addItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, 
     bool dupe;  // is there an uncorrected duplicate?
     bool cont;   // continue entry?
 
-    cerr << "The product ID must be 4 characters. Two letters, followed by 2 numbers.\n";
+    cerr << "The product ID must be 4 characters. Two letters, followed by two numbers.\nPlease note that product ID's will automatically be converted into upper case characters.\n\n";
 
     // while we are in the bounds of the array, they want to continue, and there are no duplicates (or they were corrected):
     while ((items < max) && (cont) && (!dupe)) {
@@ -193,7 +195,7 @@ void updateItem(const char prodIDArr[][PRODCHAR], int *QOHArr, int filled)
     int editLoc;            // row of item to be updated
     char editID[PRODCHAR];
 
-    cerr << "What is the product name: ";
+    cerr << "What is the product ID: ";
     cin.getline(editID, PRODCHAR);
     editLoc = findID(prodIDArr, editID, filled);
 
@@ -205,7 +207,7 @@ void updateItem(const char prodIDArr[][PRODCHAR], int *QOHArr, int filled)
         cerr << "Enter the new quantity: ";
         cin >> *(QOHArr + editLoc);
         cin.ignore();
-        cerr << "\nProduct name: " << prodIDArr[editLoc]
+        cerr << "\nProduct ID: " << prodIDArr[editLoc]
              << "\nUpdated quantity: " << *(QOHArr + editLoc) << "\n\n";
         return;
     }
@@ -238,12 +240,10 @@ void printDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
     printTableHeading();
 
     for (int i = 0; i < filled; i++) {
-        cerr << setw(5) << prodIDArr[i] << " | " << setw(13) << *(prodNameArr + i) + " | "
-             << setw(7) << setprecision(2) << fixed << *(priceArr + i) << " | "
+        cerr << setw(11) << prodIDArr[i] << " | " << setw(15) << *(prodNameArr + i) + " | "
+             << setw(10) << setprecision(2) << fixed << *(priceArr + i) << " | "
              << setw(8) << *(QOHArr + i) << endl;
     }
-
-    cerr << endl;
     return;
 }
 
@@ -280,21 +280,21 @@ bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
 {
     char ans;           // enter new ID?
     bool exists;        // does a dupe exist?
-    char prodID[PRODCHAR];  // to be sent to the find fn
+    char findProdID[PRODCHAR];
 
     do {
-        strcpy(prodID, prodIDArr[currLoc]);
-        // -1 means prodName doesn't exist, if it is 0000, they want to return
-        if (findID(prodIDArr, prodID, currLoc) != -1) {
+        strcpy(findProdID, prodIDArr[currLoc]);
+        // -1 means prodID doesn't exist
+        if (findID(prodIDArr, findProdID, currLoc) != -1) {
             exists = true;
             cerr << "This item already exists."
                  << " Would you like to input a new product ID? (Y/N): ";
             cin >> ans;
             cin.ignore();
 
-            // they want to try again, promt to enter a product ID again
             if (ans == 'y' || ans == 'Y') {
-                // reenter product ID
+                cerr << "Enter the new product ID: ";
+                cin.getline(prodIDArr[currLoc], PRODCHAR);
                 prodIDCheck(prodIDArr, currLoc);
             }
         }
@@ -305,26 +305,30 @@ bool dupeCheck(char prodIDArr[][PRODCHAR], int currLoc)
 
     if (exists)         // there is an uncorrected dupe, return true
         return true;
-    else    // dupe was corrected, continue
+    else                // there are no dupes, or it was corrected, return false
         return false;
 }
 
 void prodIDCheck(char prodIDArr[][PRODCHAR], int row)
-{/*
-    while ( !(// first 2 chars are not letters            (isalpha(prodIDArr[row][1]) != 0) &&
-        (isalpha(prodIDArr[row][2]) != 0) &&
-        // the last 2 chars are not numbers
-        (isdigit(prodIDArr[row][3]) != 0) &&
-        (isdigit(prodIDArr[row][4]) != 0)) ) {
-
+{
+    while (// entire statement will be false if it is not the correct format
+        !( // negate the false to have the loop run
+        (prodIDArr[row][0] >= 65 && prodIDArr[row][0] <= 122) &&
+        (prodIDArr[row][1] >= 65 && prodIDArr[row][1] <= 122) &&
+        (prodIDArr[row][2] >= 48 && prodIDArr[row][2] <= 57) &&
+        (prodIDArr[row][3] >= 48 && prodIDArr[row][3] <= 57)
+        ) ) {
         cerr << "Please enter 4 characters in the format AA00: ";
         cin.getline(prodIDArr[row], PRODCHAR);
         }
-    return
-    }*/
+    // it is the correct format, change the first 2 chars to capital letters
+    if (islower(prodIDArr[row][0]))
+        prodIDArr[row][0] -= 32;
+    if (islower(prodIDArr[row][1]))
+        prodIDArr[row][1] -= 32;
+    return;
 }
 
-//TODO: FIX
 void deleteItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceArr, int *QOHArr, int &items)
 {
     int deleteLoc;
@@ -346,7 +350,7 @@ void deleteItem(char prodIDArr[][PRODCHAR], string *prodNameArr, double *priceAr
         *(QOHArr + deleteLoc) = *(QOHArr + (items-1));
         // -1 item
         items--;
-        cerr << "Item deleted.\n";
+        cerr << "Item deleted.\n\n";
         return;
     }
 }
@@ -380,7 +384,7 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
                 displayID(prodIDArr, prodNameArr, priceArr, QOHArr, filled);
                 break;
             case 2:
-                cerr << "What is the product name: ";
+                cerr << "What is the product ID: ";
                 getline(cin, prodName);
 
                 printTableHeading();
@@ -396,7 +400,7 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
                 if (!found)
                     cerr << "No product with that name was found.";
 
-                cout << endl << endl;
+                cerr << endl << endl;
                 break;
             case 3:
                 cerr << "What is the minimum price: ";
@@ -419,7 +423,7 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
                 if (!found)
                     cerr << "No product within that price range was found.";
 
-                cout << endl << endl;
+                cerr << endl << endl;
                 break;
             case 4:
                 cerr << "What is the minimum quantity: ";
@@ -441,7 +445,7 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
                 if (!found)
                     cerr << "No product within that price range was found.";
 
-                cout << endl << endl;
+                cerr << endl << endl;
                 break;
             default:
                 cerr << "Please make a valid choice.\n";
@@ -451,18 +455,17 @@ void queryDB(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const 
     return;
 }
 void printQueryResults(const char prodIDArr[][PRODCHAR], const string *prodNameArr, const double *priceArr, const int *QOHArr, int i, int filled) {
-    cerr << setw(5) << prodIDArr[i] << " | " << setw(13)
-         << *(prodNameArr + i) + " | " << setw(7)
+    cerr << setw(11) << prodIDArr[i] << " | " << setw(15)
+         << *(prodNameArr + i) + " | " << setw(10)
          << setprecision(2) << fixed << *(priceArr + i) << " | "
          << setw(8) << *(QOHArr + i);
-
-    cerr << endl;
     return;
 }
 void printTableHeading()
 {
-    cerr << setw(13) << "Product ID |" << setw(13) << " Product Name |"
-        << setw(13) << " Price |" << setw(13) << " Quantity\n";
-    cerr << "------------------------------------------\n";
+    cerr << endl;
+    cerr << setw(13) << " Product ID |" << setw(15) << " Product Name |"
+        << setw(13) << " Price |" << setw(8) << " Quantity\n";
+    cerr << "---------------------------------------------------\n";
     return;
 }
