@@ -281,13 +281,11 @@ bool dupeCheck(vector<string> &prodIDVect, string &prodID)
 
 void prodIDCheck(string &prodID)
 {
-    while (// entire statement will be false if it is not the correct format
-        !( // negate the false to have the loop run
-        (prodID[0] >= 65 && prodID[0] <= 122) &&
-        (prodID[1] >= 65 && prodID[1] <= 122) &&
-        (prodID[2] >= 48 && prodID[2] <= 57) &&
-        (prodID[3] >= 48 && prodID[3] <= 57)
-        ) ) {
+    while (
+        !(isalpha(prodID[0]) && isalpha(prodID[1])) ||   // is it a letter?
+        !(isdigit(prodID[2]) && isdigit(prodID[3])) ||   // is a number?
+        !(prodID.length() == 4)                          // is it 4 chars long?
+    ) {
         cerr << "Please enter 4 characters in the format AA00: ";
         cin >> prodID;  // re-enter in correct format
         }
@@ -342,13 +340,14 @@ void queryDB(vector<string> prodIDVect, vector<string> nameVect, vector<double> 
                     if (nameVect[i] == prodName) {
                     found = true;   // ID is a match, print the info
                     printQueryResults(prodIDVect, nameVect, priceVect, QOHVect, i);
+                    cerr << endl;
                     }
                 }
 
                 if (!found)
-                    cerr << "No product with that name was found.";
+                    cerr << "No product with that name was found.\n";
 
-                cerr << endl << endl;
+                cerr << endl;
                 break;
             case 3:
                 cerr << "What is the minimum price: ";
@@ -362,13 +361,14 @@ void queryDB(vector<string> prodIDVect, vector<string> nameVect, vector<double> 
                     if ( (priceVect[i] >= priceMin) && (priceVect[i] <= priceMax) ) {
                     found = true;   // ID is a match, print the info
                     printQueryResults(prodIDVect, nameVect, priceVect, QOHVect, i);
+                    cerr << endl;
                     }
                 }
 
                 if (!found)
-                    cerr << "No product within that price range was found.";
+                    cerr << "No product within that price range was found.\n";
 
-                cerr << endl << endl;
+                cerr << endl;
                 break;
             case 4:
                 cerr << "What is the minimum quantity: ";
@@ -382,13 +382,14 @@ void queryDB(vector<string> prodIDVect, vector<string> nameVect, vector<double> 
                     if ( (QOHVect[i] >= QOHMin) && (QOHVect[i] <= QOHMax) ) {
                     found = true;   // ID is a match, print the info
                     printQueryResults(prodIDVect, nameVect, priceVect, QOHVect, i);
+                    cerr << endl;
                     }
                 }
 
                 if (!found)
-                    cerr << "No product within that price range was found.";
+                    cerr << "No product within that quantity range was found.\n";
 
-                cerr << endl << endl;
+                cerr << endl;
                 break;
             default:
                 cerr << "Please make a valid choice.\n";

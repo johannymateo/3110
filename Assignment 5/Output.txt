@@ -1,0 +1,293 @@
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Item 1
+Enter the product ID, type "0" to stop entry: aa11
+Enter the product name: Earth
+Enter the price: 345
+Enter the quantity: 4534
+
+Item 2
+Enter the product ID, type "0" to stop entry: bb22
+Enter the product name: Jupiter
+Enter the price: 8534
+Enter the quantity: 234
+
+Item 3
+Enter the product ID, type "0" to stop entry: 88jj
+Please enter 4 characters in the format AA00: c33c
+Please enter 4 characters in the format AA00: cc33
+Enter the product name: Pluto
+Enter the price: 942
+Enter the quantity: 543
+
+Item 4
+Enter the product ID, type "0" to stop entry: dd44
+Enter the product name: Earth
+Enter the price: 849
+Enter the quantity: 234
+
+Item 5
+Enter the product ID, type "0" to stop entry: cc33
+This item already exists. Would you like to input a new product ID? (Y/N): n
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+Item 5
+Enter the product ID, type "0" to stop entry: cc33
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Enter the new product ID: ee55
+Enter the product name: Mars
+Enter the price: 452
+Enter the quantity: 53
+
+Item 6
+Enter the product ID, type "0" to stop entry: ee55
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Enter the new product ID: 66ff
+Please enter 4 characters in the format AA00: ff66
+Enter the product name: Pluto
+Enter the price: 2345
+Enter the quantity: 9523
+
+Item 7
+Enter the product ID, type "0" to stop entry: 0
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 2
+
+What is the product ID: aa11
+Enter the new price: 489
+
+Product ID: aa11
+Updated price: 489
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: bb33
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: cc33
+Enter the new quantity: 9482
+
+Product ID: cc33
+Updated quantity: 9482
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 4
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: jj88
+The product ID was not found.
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: dd44
+
+Product ID: dd44
+Product Name: Earth
+Price: 849
+Quantity: 234
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 2
+
+What is the product name: Earth
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        Earth |     489.00 |     4534
+       dd44 |        Earth |     849.00 |      234
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 3
+
+What is the minimum price: 100
+What is the maximum price: 500
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        Earth |     489.00 |     4534
+       ee55 |         Mars |     452.00 |       53
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 2
+
+What is the product name: Venus
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+No product with that name was found.
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 4
+
+What is the minimum quantity: 9000
+What is the maximum quantity: 10000
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       cc33 |        Pluto |     942.00 |     9482
+       ff66 |        Pluto |    2345.00 |     9523
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 4
+
+What is the minimum quantity: 100000 
+What is the maximum quantity: 200000
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+No product within that quantity range was found.
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 5
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        Earth |     489.00 |     4534
+       bb22 |      Jupiter |    8534.00 |      234
+       cc33 |        Pluto |     942.00 |     9482
+       dd44 |        Earth |     849.00 |      234
+       ee55 |         Mars |     452.00 |       53
+       ff66 |        Pluto |    2345.00 |     9523
+
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: jj88
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: ff66
+Item deleted.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        Earth |     489.00 |     4534
+       bb22 |      Jupiter |    8534.00 |      234
+       cc33 |        Pluto |     942.00 |     9482
+       dd44 |        Earth |     849.00 |      234
+       ee55 |         Mars |     452.00 |       53
+
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 7
