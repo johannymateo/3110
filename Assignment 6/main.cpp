@@ -9,9 +9,11 @@
 #include "Phone.h"
 using namespace std;
 
+const int SIZE = 1000;
+
 int instructions();
-void addItem(Phone *, int &, int &);
-void prodIDCheck(string &);
+void addItem(Phone *, int &);
+//void prodIDCheck(string &);
 bool dupeCheck(Phone *, string &, int);
 int findID(const Phone *, string, int);
 void updatePrice(Phone *, int);
@@ -30,13 +32,8 @@ Phone *growArray(Phone *, int &);
 
 int main ()
 {
-    int dynamicDBMax, choice, items = 0;
-
-    cerr << "How many items would you like to add: ";
-    cin >> dynamicDBMax;
-
-    // declare array of objects on the heap
-    Phone *phoneArr = new Phone[dynamicDBMax];
+    int choice, items = 0;
+    Phone phoneArr[SIZE];
 
     // print meu instructions
     choice = instructions();
@@ -44,7 +41,7 @@ int main ()
     while (choice != 7) {       // 7 is exit; skip this loop and return to OS
         switch (choice) {
             case 1:
-                addItem(phoneArr, items, dynamicDBMax);
+                addItem(phoneArr, items);
                 break;
             case 2:
                 updatePrice(phoneArr, items);
@@ -67,10 +64,6 @@ int main ()
         choice = instructions();    // bring up menu again
     }
 
-    // remove phone array from heap and nullify dangling ptr
-    delete [] phoneArr;
-    phoneArr = NULL;
-
     return 0;
 }
 
@@ -89,29 +82,25 @@ int instructions()
 }
 
 // to add a phone object. Accepts array, how many objs already exists, max size of DB
-void addItem(Phone *phoneArr, int &items, int &max)
+void addItem(Phone *phoneArr, int &items)
 {
     string tempID, tempName;
     double tempPrice;
     int tempQOH;
-    bool dupe, valid;    // continue with entry?; are there duplicates?
+    bool dupe = false, valid;    // continue with entry?; are there duplicates?
 
     cerr << "The product ID must be 4 characters. Two letters, followed by two numbers.\n\n";
 
     // while there is space, they want to continue, and there are no uncorrected dupes
-    while ( (items < max) && (!dupe) ) {
-
-        // if the array is halfway filled, grow its size
-        if ( items >= (max/2) ) {
-            phoneArr = growArray(phoneArr, max);
-        }
+    while ( (items < SIZE) && (!dupe) ) {
 
         cerr << "Item " << items+1 << endl;
-        cerr << "Enter the product ID, \"0\" to stop entry: ";
+        cerr << "Enter the product ID, \"0000\" to stop entry: ";
+        cin.ignore();
         cin >> tempID;
 
-        // if they entered 0, they do not want to continue, return
-        if (tempID == "0")
+        // if they entered 0000, they do not want to continue, return
+        if (tempID == "0000")
             return;
 
         // check if tempID is the correct format
@@ -140,6 +129,7 @@ void addItem(Phone *phoneArr, int &items, int &max)
 
             items++;    // increase item count by 1
             cerr << endl;
+        }
     }
     cerr << endl;
     return;
@@ -149,7 +139,7 @@ void addItem(Phone *phoneArr, int &items, int &max)
 bool dupeCheck(Phone *phoneArr, string &tempID, int items)
 {
     char ans;           // enter a new ID?
-    bool exists;        // does a dupe exists?
+    bool exists, valid;        // does a dupe exists?
 
     do {        // -1 means the item does not exist
         if ( findID(phoneArr, tempID, items) != -1 ) {
@@ -161,7 +151,12 @@ bool dupeCheck(Phone *phoneArr, string &tempID, int items)
             if (ans == 'y' || ans == 'Y') {
                 cerr << "Enter the new product ID: ";
                 cin >> tempID;
-                prodIDCheck(tempID);
+                valid = (phoneArr + items)->prodIDCheck(tempID);
+                while (!valid) {
+                    cerr << "Enter the new product ID: ";
+                    cin >> tempID;
+                    valid = (phoneArr + items)->prodIDCheck(tempID);
+                }
             }
         }
         else
@@ -443,19 +438,4 @@ void deleteItem(Phone *phoneArr, int &items)
         cerr << "Product ID not found.\n\n";
 
     return;
-}
-
-Phone *growArray(Phone *phoneArr, int &size)
-{
-    // create the new array with double the size
-    Phone *grownPhones = new Phone[size*2];
-
-    // overwrite new array with info from old array
-    for (int i = 0; i < size; i++)
-        *(grownPhones + i) = *(phoneArr + i);
-
-    delete [] phoneArr;     // delete old array from heap
-
-    size *= 2;      // new max size for the array
-    return grownPhones;     // return ptr to new array
 }

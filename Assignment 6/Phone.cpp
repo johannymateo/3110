@@ -1,5 +1,7 @@
 #include "Phone.h"
-#include <ctype>
+#include <cctype>
+#include <string>
+#include <cstring>
 
 //default cnstructor
 Phone::Phone()

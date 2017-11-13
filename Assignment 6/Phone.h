@@ -12,7 +12,7 @@ private:
     int QOH;
 public:
     Phone();    // default constructor
-    prodIDCheck(string);    // check if the format is valid
+    bool prodIDCheck(string);    // check if the format is valid
     // setters
     void setID(string newID)
         { prodID = newID; }
