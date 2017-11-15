@@ -28,11 +28,10 @@ void displayByPrice(const Phone *, int);
 void displayByQOH(const Phone *, int);
 void printDB(const Phone *, int);
 void deleteItem(Phone *, int &);
-Phone *growArray(Phone *, int &);
 
 int main ()
 {
-    int choice, items = 0;
+    int choice, size, items = 0;
     Phone phoneArr[SIZE];
 
     // print meu instructions
@@ -196,7 +195,8 @@ void updatePrice(Phone *phoneArr, int items)
 
         (phoneArr + editLoc)->setPrice(tempPrice);
         cerr << "\nProduct ID: " << (phoneArr + editLoc)->getID()
-            << "\nUpdated price: " << (phoneArr + editLoc)->getPrice();
+             << "\nUpdated price: " << (phoneArr + editLoc)->getPrice()
+             << endl << endl;
         return;
     }
     else {      // it did not find ID
@@ -221,7 +221,8 @@ void updateQOH(Phone *phoneArr, int items)
 
         (phoneArr + editLoc)->setQOH(tempQOH);
         cerr << "\nProduct ID: " << (phoneArr + editLoc)->getID()
-            << "\nUpdated quantity: " << (phoneArr + editLoc)->getQOH();
+             << "\nUpdated quantity: " << (phoneArr + editLoc)->getQOH()
+             << endl << endl;
     }
     else {      // it did not find ID
         cerr << "Product ID not found.\n\n";
@@ -289,9 +290,9 @@ void displayByID(const Phone *phoneArr, int items)
         printQueryResults(phoneArr, loc);
     }
     else {
-        cerr << "\nProduct ID not found.\n";
+        cerr << "Product ID not found.\n";
     }
-
+    cerr << endl;
     return;
 }
 
@@ -311,20 +312,18 @@ void displayByName(const Phone *phoneArr, int items)
         if ( displayName == (phoneArr + i)->getName() ){
             found = true;   // name was found
             printQueryResults(phoneArr, i);
-            cerr << endl;
         }
     }
 
     if (!found) {
-        cerr << "\nNo product with that name was found.\n\n";
+        cerr << "No product with that name was found.\n";
     }
-
+    cerr << endl;
     return;
 }
 
 void printTableHeading()
 {
-    cerr << endl;
     cerr << setw(13) << " Product ID |" << setw(15) << " Product Name |"
         << setw(13) << " Price |" << setw(8) << " Quantity\n";
     cerr << "---------------------------------------------------\n";
@@ -337,7 +336,7 @@ void printQueryResults( const Phone *phoneArr, int i)
     cerr << setw(11) << (phoneArr + i)->getID() << " | " << setw(15)
          << (phoneArr + i)->getName() + " | " << setw(10)
          << setprecision(2) << fixed << (phoneArr + i)->getPrice() << " | "
-         << setw(8) << (phoneArr + i)->getQOH();
+         << setw(8) << (phoneArr + i)->getQOH() << endl;
 
     return;
 }
@@ -362,13 +361,13 @@ void displayByPrice(const Phone *phoneArr, int items)
         ) {
                  found = true;
                  printQueryResults(phoneArr, i);
-                 cerr << endl << endl;
         }
     }
 
     if (!found)
-        cerr << "No product within that price range was found.\n\n";
+        cerr << "No product within that price range was found.\n";
 
+    cerr << endl;
     return;
 }
 
@@ -392,13 +391,13 @@ void displayByQOH(const Phone *phoneArr, int items)
          ) {
                  found = true;
                  printQueryResults(phoneArr, i);
-                 cerr << endl << endl;
         }
     }
 
     if (!found)
-        cerr << "No product within that price range was found.\n\n";
+        cerr << "No product within that price range was found.\n";
 
+    cerr << endl;
     return;
 }
 
@@ -412,7 +411,7 @@ void printDB(const Phone *phoneArr, int items)
              << setprecision(2) << fixed << (phoneArr + i)->getPrice() << " | "
              << setw(8) << (phoneArr + i)->getQOH() << endl;
     }
-    cerr << endl << endl;
+    cerr << endl;
 
     return;
 }
@@ -432,10 +431,11 @@ void deleteItem(Phone *phoneArr, int &items)
         *(phoneArr + deleteLoc) = *(phoneArr + (items-1));
         // 1 less item
         items--;
-        cerr << "Item deleted.\n\n";
+        cerr << "Item deleted.";
     }
     else
-        cerr << "Product ID not found.\n\n";
+        cerr << "Product ID not found.";
 
+    cerr << endl << endl;
     return;
 }

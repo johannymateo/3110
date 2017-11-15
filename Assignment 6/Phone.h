@@ -14,14 +14,12 @@ public:
     Phone();    // default constructor
     bool prodIDCheck(string);    // check if the format is valid
     // setters
-    void setID(string newID)
-        { prodID = newID; }
-    void setName(string newName)
-        { name = newName; }
-    void setPrice(double newPrice)
-        { price = newPrice; }
-    void setQOH(double newQOH)
-        { QOH = newQOH; }
+    void setName(string name)
+        { this->name = name; }
+    void setPrice(double price)
+        { this->price = price; }
+    void setQOH(double QOH)
+        { this->QOH = QOH; }
 
     // getters
     string getID() const
