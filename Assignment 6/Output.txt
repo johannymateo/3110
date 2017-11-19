@@ -1,0 +1,179 @@
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+
+Item 1
+Enter the product ID, "0000" to stop entry: aa11
+Enter the product name: Red
+Enter the price: 343.12
+Enter the quantity: 7892
+
+Item 2
+Enter the product ID, "0000" to stop entry: bb22
+Enter the product name: Orange
+Enter the price: 8912
+Enter the quantity: 452
+
+Item 3
+Enter the product ID, "0000" to stop entry: cc33
+Enter the product name: Green
+Enter the price: 1231.32
+Enter the quantity: 8923
+
+Item 4
+Enter the product ID, "0000" to stop entry: dd44
+Enter the product name: Red
+Enter the price: 345.21
+Enter the quantity: 452
+
+Item 5
+Enter the product ID, "0000" to stop entry: 0000
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+
+Item 5
+Enter the product ID, "0000" to stop entry: aa11
+This item already exists. Would you like to input a new product ID? (Y/N): y
+Enter the new product ID: ee55
+Enter the product name: Orange
+Enter the price: 832.43
+Enter the quantity: 234
+
+Item 6
+Enter the product ID, "0000" to stop entry: ee55
+This item already exists. Would you like to input a new product ID? (Y/N): n
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 2
+
+What is the product ID: bb22
+Enter the new price: 854.12
+
+Product ID: bb22
+Updated price: 854.12
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: gg66
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 4
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: bb22
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       bb22 |       Orange |     854.12 |      452
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 2
+
+What is the product name: Orange
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       bb22 |       Orange |     854.12 |      452
+       ee55 |       Orange |     832.43 |      234
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 4
+
+What is the minimum quantity: 200
+What is the maximum quantity: 500
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       bb22 |       Orange |     854.12 |      452
+       dd44 |          Red |     345.21 |      452
+       ee55 |       Orange |     832.43 |      234
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 5
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: aa11
+Item deleted.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       ee55 |       Orange |     832.43 |      234
+       bb22 |       Orange |     854.12 |      452
+       cc33 |        Green |    1231.32 |     8923
+       dd44 |          Red |     345.21 |      452
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 7
