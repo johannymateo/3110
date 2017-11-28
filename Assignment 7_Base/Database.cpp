@@ -1,87 +1,20 @@
-// Johanny Mateo
-// CISC 3110 - Assignment 7
-// Make database object
-
+#include "Database.h"
+#include "Phone.h"
+#include <iostream>
 #include <iostream>
 #include <string>
 #include <cctype>
 #include <iomanip>
-#include "Phone.h"
 using namespace std;
 
-const int SIZE = 1000;
-
-int instructions();
-void addItem(Phone *, int &);
-//void prodIDCheck(string &);
-bool dupeCheck(Phone *, string &, int);
-int findID(const Phone *, string, int);
-void updatePrice(Phone *, int);
-void updateQOH(Phone *, int);
-int queryInstructions();
-void queryDB(const Phone *, int);
-void displayByID(const Phone *, int);
-void displayByName(const Phone *, int);
-void printTableHeading();
-void printQueryResults(const Phone *, int);
-void displayByPrice(const Phone *, int);
-void displayByQOH(const Phone *, int);
-void printDB(const Phone *, int);
-void deleteItem(Phone *, int &);
-
-int main ()
+Database::Database()
 {
-    int choice, size, items = 0;
-    Phone phoneArr[SIZE];
-
-    // print meu instructions
-    choice = instructions();
-
-    while (choice != 7) {       // 7 is exit; skip this loop and return to OS
-        switch (choice) {
-            case 1:
-                addItem(phoneArr, items);
-                break;
-            case 2:
-                updatePrice(phoneArr, items);
-                break;
-            case 3:
-                updateQOH(phoneArr, items);
-                break;
-            case 4:
-                queryDB(phoneArr, items);
-                break;
-            case 5:
-                printDB(phoneArr, items);
-                break;
-            case 6:
-                deleteItem(phoneArr, items);
-                break;
-            default:
-                cerr << "Please make a valid choice.\n";
-        }
-        choice = instructions();    // bring up menu again
-    }
-
-    return 0;
+    // sets the phone array items to 0
+    items = 0;
 }
 
-//displays instructions, returns menu choice
-int instructions()
-{
-    int decision;
-    cerr << "1. Add Item" << endl << "2. Update Item Price" << endl
-         << "3. Update Item Quantity" << endl << "4. Query Database" << endl
-         << "5. Print Database" << endl << "6. Delete Item" << endl
-         << "7. Exit Program" << endl
-         << "Make a choice: ";
-    cin >> decision;
-    cerr << endl;
-    return decision;
-}
-
-// to add a phone object. Accepts array, how many objs already exists, max size of DB
-void addItem(Phone *phoneArr, int &items)
+// to add a phone object
+void Database::addItem()
 {
     string tempID, tempName;
     double tempPrice;
@@ -111,20 +44,23 @@ void addItem(Phone *phoneArr, int &items)
             valid = (phoneArr + items)->prodIDCheck(tempID);
         }
 
-        dupe = dupeCheck(phoneArr, tempID, items); // does this ID already exist?
+        dupe = dupeCheck(tempID); // does this ID already exist?
 
         if (!dupe) {  // if the last entered ID is not a duplicate
             // send the temporary variables to the obj
             cerr << "Enter the product name: ";
             cin.ignore();
             getline(cin, tempName);
-            (phoneArr + items)->setName(tempName);
             cerr << "Enter the price: ";
             cin >> tempPrice;
-            (phoneArr + items)->setPrice(tempPrice);
             cerr << "Enter the quantity: ";
             cin >> tempQOH;
-            (phoneArr + items)->setQOH(tempQOH);
+
+            // invoke the constructor on the temp obj
+            Phone tempObj(tempID, tempName, tempPrice, tempQOH);
+            // the tempObj is the object that is going into this loc
+            phoneArr[items] = tempObj;
+
 
             items++;    // increase item count by 1
             cerr << endl;
@@ -135,13 +71,13 @@ void addItem(Phone *phoneArr, int &items)
 }
 
 // checks if ID already exists & returns if this is true or false. Accepts obj arr, tempID, and how many objs already exist
-bool dupeCheck(Phone *phoneArr, string &tempID, int items)
+bool Database::dupeCheck(string &tempID)
 {
     char ans;           // enter a new ID?
     bool exists, valid;        // does a dupe exists?
 
     do {        // -1 means the item does not exist
-        if ( findID(phoneArr, tempID, items) != -1 ) {
+        if ( findID(tempID) != -1 ) {
             exists = true;
             cerr << "This item already exists. "
                  << "Would you like to input a new product ID? (Y/N): ";
@@ -170,7 +106,7 @@ bool dupeCheck(Phone *phoneArr, string &tempID, int items)
 }
 
 // checks for prodID and returns loc. in arr. Accepts obj arr, string to find, and how many items are in the arr
-int findID(const Phone *phoneArr, string findMe, int items)
+int Database::findID(string findMe) const
 {
     for (int i = 0; i < items; i++)
         if ( findMe == (phoneArr + i)->getID() )
@@ -179,7 +115,7 @@ int findID(const Phone *phoneArr, string findMe, int items)
     return -1;  // -1 to indicate it didn't find the ID
 }
 
-void updatePrice(Phone *phoneArr, int items)
+void Database::updatePrice()
 {
     int editLoc;        // location of item to be updated
     string editID;      // ID of item to be edited
@@ -187,7 +123,7 @@ void updatePrice(Phone *phoneArr, int items)
 
     cerr << "What is the product ID: ";
     cin >> editID;
-    editLoc = findID(phoneArr, editID, items);
+    editLoc = findID(editID);
 
     if (editLoc != -1) {        // it found ID
         cerr << "Enter the new price: ";
@@ -205,7 +141,7 @@ void updatePrice(Phone *phoneArr, int items)
     }
 }
 
-void updateQOH(Phone *phoneArr, int items)
+void Database::updateQOH()
 {
     int editLoc;        // location of item to be updated
     string editID;      // ID of item to be edited
@@ -213,7 +149,7 @@ void updateQOH(Phone *phoneArr, int items)
 
     cerr << "What is the product ID: ";
     cin >> editID;
-    editLoc = findID(phoneArr, editID, items);
+    editLoc = findID(editID);
 
     if (editLoc != -1) {        // it found ID
         cerr << "Enter the new quantity: ";
@@ -231,7 +167,7 @@ void updateQOH(Phone *phoneArr, int items)
     return;
 }
 
-int queryInstructions()
+int Database::queryInstructions() const
 {
     int decision;
 
@@ -248,7 +184,7 @@ int queryInstructions()
     return decision;
 }
 
-void queryDB (const Phone *phoneArr, int items)
+void Database::queryDB() const
 {
     int choice;
 
@@ -256,16 +192,16 @@ void queryDB (const Phone *phoneArr, int items)
     while (choice != 5) {   // 5 is to return to previous menu
         switch (choice) {
             case 1:
-                displayByID(phoneArr, items);
+                displayByID();
                 break;
             case 2:
-                displayByName(phoneArr, items);
+                displayByName();
                 break;
             case 3:
-                displayByPrice(phoneArr, items);
+                displayByPrice();
                 break;
             case 4:
-                displayByQOH(phoneArr, items);
+                displayByQOH();
                 break;
             default:
                 cerr << "Please make a valid choice.\n";
@@ -275,7 +211,7 @@ void queryDB (const Phone *phoneArr, int items)
     return;
 }
 
-void displayByID(const Phone *phoneArr, int items)
+void Database::displayByID() const
 {
     string displayID;
     int loc;
@@ -283,11 +219,11 @@ void displayByID(const Phone *phoneArr, int items)
     cerr << "What is the product ID: ";
     cin >> displayID;
 
-    loc = findID(phoneArr, displayID, items);
+    loc = findID(displayID);
 
     if (loc != -1) {    // if found print info
         printTableHeading();
-        printQueryResults(phoneArr, loc);
+        printQueryResults(loc);
     }
     else {
         cerr << "Product ID not found.\n";
@@ -296,7 +232,7 @@ void displayByID(const Phone *phoneArr, int items)
     return;
 }
 
-void displayByName(const Phone *phoneArr, int items)
+void Database::displayByName() const
 {
     string displayName;
     int loc;
@@ -311,7 +247,7 @@ void displayByName(const Phone *phoneArr, int items)
     for (int i = 0; i < items; i++) {
         if ( displayName == (phoneArr + i)->getName() ){
             found = true;   // name was found
-            printQueryResults(phoneArr, i);
+            printQueryResults(i);
         }
     }
 
@@ -322,7 +258,7 @@ void displayByName(const Phone *phoneArr, int items)
     return;
 }
 
-void printTableHeading()
+void Database::printTableHeading() const
 {
     cerr << setw(13) << " Product ID |" << setw(15) << " Product Name |"
         << setw(13) << " Price |" << setw(8) << " Quantity\n";
@@ -331,7 +267,7 @@ void printTableHeading()
     return;
 }
 
-void printQueryResults( const Phone *phoneArr, int i)
+void Database::printQueryResults(int i) const
 {
     cerr << setw(11) << (phoneArr + i)->getID() << " | " << setw(15)
          << (phoneArr + i)->getName() + " | " << setw(10)
@@ -341,7 +277,7 @@ void printQueryResults( const Phone *phoneArr, int i)
     return;
 }
 
-void displayByPrice(const Phone *phoneArr, int items)
+void Database::displayByPrice() const
 {
     double minPrice, maxPrice;
     bool found = false;
@@ -360,7 +296,7 @@ void displayByPrice(const Phone *phoneArr, int items)
              ( (phoneArr + i)->getPrice() <= maxPrice )
         ) {
                  found = true;
-                 printQueryResults(phoneArr, i);
+                 printQueryResults(i);
         }
     }
 
@@ -371,7 +307,7 @@ void displayByPrice(const Phone *phoneArr, int items)
     return;
 }
 
-void displayByQOH(const Phone *phoneArr, int items)
+void Database::displayByQOH() const
 {
     double minQOH, maxQOH;
     bool found = false;
@@ -390,7 +326,7 @@ void displayByQOH(const Phone *phoneArr, int items)
              ( (phoneArr + i)->getQOH() <= maxQOH )
          ) {
                  found = true;
-                 printQueryResults(phoneArr, i);
+                 printQueryResults(i);
         }
     }
 
@@ -401,7 +337,7 @@ void displayByQOH(const Phone *phoneArr, int items)
     return;
 }
 
-void printDB(const Phone *phoneArr, int items)
+void Database::printDB() const
 {
     printTableHeading();
 
@@ -416,7 +352,7 @@ void printDB(const Phone *phoneArr, int items)
     return;
 }
 
-void deleteItem(Phone *phoneArr, int &items)
+void Database::deleteItem()
 {
     string deleteID;
     int deleteLoc;
@@ -424,7 +360,7 @@ void deleteItem(Phone *phoneArr, int &items)
     cerr << "What is the product ID: ";
     cin >> deleteID;
 
-    deleteLoc = findID(phoneArr, deleteID, items);
+    deleteLoc = findID(deleteID);
 
     if (deleteLoc != -1) {
         // overwrite the loc to be deleted with the last loc
