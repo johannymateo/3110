@@ -3,12 +3,6 @@
 #include "Phone.h"
 #include <iostream>
 
-// calls the instruction
-Program::Program()
-{
-    instructions();
-}
-
 void Program::instructions()
 {
     int decision;
@@ -22,11 +16,11 @@ void Program::instructions()
 
     // call the menu function if the answer isn't exit
     if (decision != 7)
-        menu(decision);
+        switchMenu(decision);
 }
 
 // what does the user want to do? Calls functions from DB to edit the array
-void Program::menu(int action)
+void Program::switchMenu(int action)
 {
     switch (action) {
         case 1:

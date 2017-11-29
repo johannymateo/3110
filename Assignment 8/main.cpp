@@ -1,6 +1,6 @@
 // Johanny Mateo
-// CISC 3110 - Assignment 7
-// Make database object
+// CISC 3110 - Assignment 8
+// Make database object dynamically
 
 // The menus/prompts
 #include "Program.h"
@@ -8,14 +8,13 @@
 #include "Database.h"
 // The phone object
 #include "Phone.h"
-#include <iostream>
 using namespace std;
 
 int main ()
 {
     // create a program object (displays instructions)
-    // which creates the DB object
-    // which creates the phone object
+    // which has a DB object
+    // which has a phone object
     Program start;
     return 0;
 }

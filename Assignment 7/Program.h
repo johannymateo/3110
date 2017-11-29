@@ -9,9 +9,10 @@ using namespace std;
 class Program {
 private:
     Database db;
-    void instructions();
-    void menu(int);
+    void instructions();        // displays instructions/menu
+    void switchMenu(int);       // what does the user want to do?
 public:
-    Program();
+    Program()
+    {   instructions(); }       // calls the instruction
 };
 #endif
