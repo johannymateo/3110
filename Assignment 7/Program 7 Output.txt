@@ -1,0 +1,200 @@
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+
+Item 1
+Enter the product ID, "0000" to stop entry: aa11
+Enter the product name: first
+Enter the price: 235
+Enter the quantity: 124
+
+Item 2
+Enter the product ID, "0000" to stop entry: aa22
+Enter the product name: second
+Enter the price: 456
+Enter the quantity: 2353
+
+Item 3
+Enter the product ID, "0000" to stop entry: aa33
+Enter the product name: third
+Enter the price: 345
+Enter the quantity: 125
+
+Item 4
+Enter the product ID, "0000" to stop entry: aa11
+This item already exists. Would you like to input a new product ID? (Y/N): n
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 1
+
+The product ID must be 4 characters. Two letters, followed by two numbers.
+
+Item 4
+Enter the product ID, "0000" to stop entry: aa44
+Enter the product name: fourth
+Enter the price: 345
+Enter the quantity: 8689
+
+Item 5
+Enter the product ID, "0000" to stop entry: 55aa
+Please enter 4 characters in the format AA00: aa55
+Enter the product name: fifth
+Enter the price: 756 
+Enter the quantity: 6734
+
+Item 6
+Enter the product ID, "0000" to stop entry: aa66
+Enter the product name: sixth
+Enter the price: 9843
+Enter the quantity: 456
+
+Item 7
+Enter the product ID, "0000" to stop entry: 0000
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 2
+
+What is the product ID: aa11
+Enter the new price: 111.11
+
+Product ID: aa11
+Updated price: 111.11
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: aa77
+Product ID not found.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 3
+
+What is the product ID: aa44
+Enter the new quantity: 0
+
+Product ID: aa44
+Updated quantity: 0
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 4
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 1
+
+What is the product ID: aa10
+Product ID not found.
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 2
+
+What is the product name: third
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa33 |        third |     345.00 |      125
+
+1. Display by Product ID
+2. Display by Product Name
+3. Display by Price
+4. Display by Quantity on Hand
+5. Return to Previous Menu
+Make a choice: 5
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        first |     111.11 |      124
+       aa22 |       second |     456.00 |     2353
+       aa33 |        third |     345.00 |      125
+       aa44 |       fourth |     345.00 |        0
+       aa55 |        fifth |     756.00 |     6734
+       aa66 |        sixth |    9843.00 |      456
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 6
+
+What is the product ID: aa44
+Item deleted.
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 5
+
+ Product ID | Product Name |      Price | Quantity
+---------------------------------------------------
+       aa11 |        first |     111.11 |      124
+       aa22 |       second |     456.00 |     2353
+       aa33 |        third |     345.00 |      125
+       aa66 |        sixth |    9843.00 |      456
+       aa55 |        fifth |     756.00 |     6734
+
+1. Add Item
+2. Update Item Price
+3. Update Item Quantity
+4. Query Database
+5. Print Database
+6. Delete Item
+7. Exit Program
+Make a choice: 7
