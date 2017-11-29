@@ -416,6 +416,7 @@ void Database::growPhoneArr()
 
     // set phoneArr ptr to point to new array and change dbSize
     this->phoneArr = phoneArrGrown;
+    phoneArrGrown = NULL;		// phoneArr is already pointing here, nullify this
     this->dbSize *= 2;
     return;
 }

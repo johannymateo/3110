@@ -35,7 +35,8 @@ public:
             this->phoneArr[i] = other.phoneArr[i];  }
 
     ~Database()
-    {   delete [] phoneArr; }
+    {   delete [] phoneArr;
+    	phoneArr = NULL;	}
 
     const Database operator= (const Database &);
 
